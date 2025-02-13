@@ -32,7 +32,12 @@ function ProductList() {
                         {products.map(product => (
                             <tr key={product.id}>
                                 <td>{product.id}</td>
-                                <td>{product.name}</td>
+                                <td>
+                                    {/* ✅ 상품명을 클릭하면 상세페이지(`/products/:id`)로 이동 */}
+                                    <Link to={`/products/${product.id}`} className="text-primary">
+                                        {product.name}
+                                    </Link>
+                                </td>
                                 <td>{product.price}원</td>
                                 <td>{product.quantity}</td>
                             </tr>

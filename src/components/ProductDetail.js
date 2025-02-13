@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { fetchProductById } from '../api/api';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { getProductById } from '../api/api';
 
 function ProductDetail() {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetchProductById(id)
+        getProductById(id)
             .then(setProduct)
-            .catch(setError);
+            .catch(err => {
+                // ✅ 에러가 객체인지 확인 후, 메시지 출력
+                const errorMessage = err.errorMessage || "상품 정보를 불러오는 중 오류 발생!";
+                setError(errorMessage);
+            });
     }, [id]);
 
     return (
@@ -24,6 +29,13 @@ function ProductDetail() {
                     <p><strong>상품명:</strong> {product.name}</p>
                     <p><strong>가격:</strong> {product.price}원</p>
                     <p><strong>재고:</strong> {product.quantity}개</p>
+                    
+                    <button 
+                        className="btn btn-success mt-3"
+                        onClick={() => navigate(`/order/${product.id}`)}
+                    >
+                        주문하기
+                    </button>
                 </div>
             ) : (
                 <p>상품 정보를 불러오는 중...</p>
